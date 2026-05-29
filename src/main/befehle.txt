@@ -7,68 +7,11 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 
 rm -rf ~/.m2/repository/com/vaadin
+Remove-Item -Recurse -Force "$env:USERPROFILE\.m2\repository\com\vaadin"
 ./mvnw clean package -U
 ./mvnw spring-boot:run
 
-setSpacing(true);
-
-H1 ueberschrift = new H2("hi")
-add(ueberschrift);
-
-Paragraph p1 = new Paragraph("text");
-p1.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p2 = new Paragraph("text");
-p2.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p3 = new Paragraph("text");
-p3.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p4 = new Paragraph("text");
-p4.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-add(p1,p2,p3,p4);
-
-
-Image img = new Image("image/logo.png","logo");
-img.getStyle()
-    .set("width","300px")
-    .set("font-family","cursive");
-add(img);
-
-header.setSpacing(false);
-header.setPadding(false);
-header.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-
-
-
-public static Component getParagraphs(){
-
-Paragraph p1 = new Paragraph("text");
-p1.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p2 = new Paragraph("text");
-p2.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p3 = new Paragraph("text");
-p3.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-Paragraph p4 = new Paragraph("text");
-p4.getStyle()
-    .set("color","blue")
-    .set("font-size","2rem");
-
- VerticalLayout paragraphen = new VerticalLayout(p1,p2,p3,p4);
- paragraphen.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-
- return paragraphen;
-}
-
-add(BankView.getParagraphs());
+import java.time.LocalDate;
+import java.util.concurrent.atomic.AtomicLong;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
