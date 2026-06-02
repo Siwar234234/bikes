@@ -2,18 +2,11 @@
 package at.spengergasse.domain;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.*;
 
-@Getter
-@Setter
-@ToString
-@Entity
-@EqualsAndHashCode (of = "bikeId", callSuper = false)
+
 public class Bike {
     @Id
     private Long bikeId;
@@ -33,6 +26,7 @@ public class Bike {
         setPreis(preis);
         setVdatum(vdatum);
     }
+
 
     public Bike(String bezeichnung, String farbe,
                 Boolean verfuegbar, Double preis, LocalDate vdatum) {
@@ -71,9 +65,72 @@ public class Bike {
         }
         this.preis = preis;
     }
+    public void setBikeId(Long bikeId) {
+        this.bikeId = bikeId;
+    }
+    /**********************************************************************************/
+    public void setBezeichnung(String bezeichnung) {
+        this.bezeichnung = bezeichnung;
+    }
 
+    public void setVerfuegbar(Boolean verfuegbar) {
+        this.verfuegbar = verfuegbar;
+    }
+
+    public void setVdatum(LocalDate vdatum) {
+        this.vdatum = vdatum;
+    }
+
+    public Long getBikeId() {
+        return bikeId;
+    }
+
+    public String getBezeichnung() {
+        return bezeichnung;
+    }
+
+    public String getFarbe() {
+        return farbe;
+    }
+
+    public Boolean getVerfuegbar() {
+        return verfuegbar;
+    }
+
+    public Double getPreis() {
+        return preis;
+    }
+
+    public LocalDate getVdatum() {
+        return vdatum;
+    }
+    /****************************************************************************/
     @Override
     public Bike clone(){
         return new Bike(bikeId,bezeichnung,farbe,verfuegbar,preis,vdatum);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Bike bike = (Bike) o;
+        return Objects.equals(bikeId, bike.bikeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(bikeId);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("bikeId: ").append(bikeId);
+        sb.append(", bezeichnung: ").append(bezeichnung).append('\'');
+        sb.append(", farbe: ").append(farbe).append('\'');
+        sb.append(", verfuegbar: ").append(verfuegbar);
+        sb.append(", preis: ").append(preis);
+        sb.append(", vdatum: ").append(vdatum);
+        return sb.toString();
     }
 }
