@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class BikeService {
-    private final ArrayList<Bike> bikes= new ArrayList<>(1000);
+    private final ArrayList<Bike> bikes;
+    public BikeService(){
+        bikes= new ArrayList<>(1000);
+        testDaten(100);
+    }
 
     public void testDaten(int anzahl){
         String[] colors = {"Rot", "Blau", "Grün", "Gelb", "Schwarz", "Weiß", "Orange", "Lila", "Pink", "Braun", "Grau", "Türkis", "Silber", "Gold", "Dunkelblau"};
@@ -36,6 +40,10 @@ public class BikeService {
             }
     }
 
+    public ArrayList<Bike> findAll() {
+        ArrayList<Bike> copy = new ArrayList<>(bikes);
+        return copy;
+    }
 
     public String toString(){
         return bikes.stream()
