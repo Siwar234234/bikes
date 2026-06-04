@@ -45,6 +45,9 @@ public class BikeService {
         return copy;
     }
 
+    public void removeAll(){
+        bikes.clear();
+    }
     public String toString(){
         return bikes.stream()
             .map(bike -> bike.toString())
