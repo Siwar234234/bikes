@@ -39,6 +39,9 @@ public class BikeService {
 
             }
     }
+    public boolean addBike(Bike b){
+        return bikes.add(b);
+    }
 
     public ArrayList<Bike> findAll() {
         ArrayList<Bike> copy = new ArrayList<>(bikes);
