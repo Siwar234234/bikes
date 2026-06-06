@@ -1,11 +1,13 @@
 package at.spengergasse.service;
 
 import at.spengergasse.domain.Bike;
+import at.spengergasse.domain.BikeException;
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,5 +57,29 @@ public class BikeService {
         return bikes.stream()
             .map(bike -> bike.toString())
             .collect(Collectors.joining("\n"));
+    }
+
+    public void removeById(Long id){
+        Iterator<Bike> iter = bikes.iterator();
+        Bike b;
+        boolean gefunden = false;
+        while(iter.hasNext()){
+            b = iter.next();
+            if(b.getBikeId() == id){
+                iter.remove();
+                gefunden = true;
+            }
+        }
+        if(!gefunden){
+            throw new BikeException("Entfernen hat nicht funktioniert");
+        }
+    }
+
+    public void plusHundertEur(Long id){
+        for(Bike b : bikes){
+            if(b.getBikeId() == id){
+                b.setPreis(b.getPreis()+100.0);
+            }
+        }
     }
 }

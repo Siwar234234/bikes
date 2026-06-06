@@ -40,7 +40,7 @@ public class ModelsView extends VerticalLayout {
         this.bikeService = bikeService;
         setSpacing(true);
         setSizeFull();
-        Image img = new Image("images/fahrrad.png","Bild");
+        Image img = new Image("images/fahrrad.webp","Bild");
         img.setWidth("32px");
         Span span = new Span("Modelle");
 
@@ -60,6 +60,12 @@ public class ModelsView extends VerticalLayout {
             return cb;})
                 .setHeader("verfuegbar")
                 .setSortable(true);
+        grid.addComponentColumn(bike -> new Button("Delete", b -> deleteById(bike.getBikeId())))
+                .setHeader("Action")
+                .setSortable(false);
+        grid.addComponentColumn(bike -> new Button("Preis+100",b -> plusHundert(bike.getBikeId())))
+                .setHeader("Action2")
+                .setSortable(false);
 
         buttonRemoveAll.addClickListener(b -> setButtonRemoveAll());
         buttonAdd10.addClickListener(b -> setTestDaten());
@@ -90,6 +96,19 @@ public class ModelsView extends VerticalLayout {
     public void setButtonRemoveAll(){
         bikeService.removeAll();
         buttonRemoveAll.setEnabled(false);
+        reload();
+    }
+
+    public void deleteById(Long id){
+        try{
+            bikeService.removeById(id);
+            reload();
+        }catch (BikeException e){
+            Notification.show(e.getMessage());
+        }
+    }
+    public void plusHundert(Long id){
+        bikeService.plusHundertEur(id);
         reload();
     }
     private void reload(){

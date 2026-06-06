@@ -1,4 +1,9 @@
 psql "postgresql://postgres:postgres@localhost:5432"
+psql "postgresql://postgres:postgres@localhost:5432"
+CREATE DATABASE pizzagriesy;
+CREATE USER pizzagriesy WITH PASSWORD 'pizzagriesy';
+GRANT ALL PRIVILEGES ON DATABASE pizzagriesy TO pizzagriesy;
+quit;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
@@ -10,7 +15,6 @@ rm -rf ~/.m2/repository/com/vaadin
 Remove-Item -Recurse -Force "$env:USERPROFILE\.m2\repository\com\vaadin"
 ./mvnw clean package -U
 ./mvnw spring-boot:run
-
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicLong;
 import jakarta.persistence.Entity;

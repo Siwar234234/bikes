@@ -4,15 +4,25 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import jakarta.persistence.Id;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
+@Entity
 public class Bike {
     @Id
     private Long bikeId;
+    @NotNull(message = "Bezeichnung darf nicht null sein")
+    @Size(min = 3, max = 50, message = "Bezeichnung muss zw 2 und 50 Zeichein groß sein")
+    @NotBlank(message = "Bezeichnung darf nicht leer sein")
     private String bezeichnung;
+
+    @Pattern(regexp = "Rot|Blau|Grün|Gelb|Schwarz|Weiß|Orange|Lila|Pink|Braun|Grau|Türkis|Silber|Gold|Dunkelblau", message = "Ungueltige Farbe")
     private String farbe;
     private Boolean verfuegbar;
+
+    @DecimalMin(value = "100.0", message = "The min. price is 8.0 Eur")
+    @DecimalMax(value = "1000.0", message = "The max. price is 30.0 Eur")
     private Double preis;
     private LocalDate vdatum;
     private static final AtomicLong sequence = new AtomicLong(1000);
@@ -51,18 +61,11 @@ public class Bike {
         this.bikeId = sequence.getAndIncrement();
     }
 
-    private static final String[] colors = {"Rot", "Blau", "Grün", "Gelb", "Schwarz", "Weiß", "Orange", "Lila", "Pink", "Braun", "Grau", "Türkis", "Silber", "Gold", "Dunkelblau"};
 
     public void setFarbe(String farbe) {
-        if (!Arrays.asList(colors).contains(farbe)) {
-            throw new BikeException("Farbe gibt es nicht");
-        }
         this.farbe = farbe;
     }
     public void setPreis(Double preis){
-        if(preis< 0 || preis>10000){
-            throw new BikeException("Preis darf nicht negativ sein und darf höchstens 10000 sein.");
-        }
         this.preis = preis;
     }
     public void setBikeId(Long bikeId) {
