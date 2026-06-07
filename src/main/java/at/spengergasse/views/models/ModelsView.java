@@ -4,22 +4,25 @@ import at.spengergasse.domain.Bike;
 import at.spengergasse.domain.BikeException;
 import at.spengergasse.service.BikeService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.button.*;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
+import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.textfield.TextField;
 
 
 import java.awt.*;
@@ -33,6 +36,7 @@ public class ModelsView extends VerticalLayout {
     private final Button buttonRemoveAll = new Button("Remove all bikes");
     private final Button buttonAdd10 = new Button("Add 10 bikes");
     private final Button addWrongModell = new Button("Add wrong button");
+    private final Button buttonAdd1= new Button("Add 1");
     private final Grid<Bike> grid = new Grid<>(Bike.class,false);
     private final BikeService bikeService;
 
@@ -69,8 +73,9 @@ public class ModelsView extends VerticalLayout {
 
         buttonRemoveAll.addClickListener(b -> setButtonRemoveAll());
         buttonAdd10.addClickListener(b -> setTestDaten());
+        buttonAdd1.addClickListener(b -> addOne());
         addWrongModell.addClickListener(b -> addWrongModell());
-        HorizontalLayout buttons = new HorizontalLayout(buttonRemoveAll,buttonAdd10,addWrongModell);
+        HorizontalLayout buttons = new HorizontalLayout(buttonRemoveAll,buttonAdd10,addWrongModell,buttonAdd1);
         buttons.setSpacing(true);
         add(buttons,grid);
         reload();
@@ -110,6 +115,52 @@ public class ModelsView extends VerticalLayout {
     public void plusHundert(Long id){
         bikeService.plusHundertEur(id);
         reload();
+    }
+
+    public void addOne(){
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Fahhrad hinzufuegen");
+
+        TextField bikeId = new TextField("BikeId");
+        bikeId.setReadOnly(true);
+        TextField bezeichnung = new TextField("Modell-Bezeichnung");
+        Checkbox verfuegbar = new Checkbox("Verfuegbar");
+        NumberField preis = new NumberField("Preis");
+        ComboBox<String> farbe = new ComboBox<>("Farbe");
+        farbe.setItems("Rot", "Grün", "Gelb", "Schwarz", "Weiß", "Orange", "Lila", "Pink",
+                "Braun", "Grau", "Türkis", "Silber", "Gold", "Dunkelblau");
+        DatePicker vdatum = new DatePicker("Veroeffentlicht");
+
+        BeanValidationBinder binder = new BeanValidationBinder(Bike.class);
+
+        binder.forField(bezeichnung).bind("bezeichnung");
+        binder.forField(verfuegbar).bind("verfuegbar");
+        binder.forField(preis).bind("preis");
+        binder.forField(vdatum).bind("vdatum");
+
+        Bike bike = new Bike();
+        binder.setBean(bike);
+        bikeId.setValue(""+bike.getBikeId());
+        VerticalLayout v = new VerticalLayout();
+        v.add(bikeId, bezeichnung, verfuegbar, preis, farbe, vdatum);
+
+        Button addButton = new Button("add");
+        addButton.addClickListener(e ->{
+            if(binder.validate().isOk()){
+                bikeService.addBike(bike);
+                reload();
+                dialog.close();
+            }else{
+                Notification.show("Fehlber bei den Daten");
+            }
+        });
+        Button cancelButton = new Button("cancel");
+        cancelButton.addClickListener(e -> dialog.close());
+        dialog.getFooter().add(addButton,cancelButton);
+        dialog.add(v);
+        dialog.open();
+
+
     }
     private void reload(){
         grid.setItems(bikeService.findAll());
