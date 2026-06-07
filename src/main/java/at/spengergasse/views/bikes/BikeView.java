@@ -63,7 +63,7 @@ public class BikeView extends HorizontalLayout {
 
     public static Component getHeader(){
         H1 ueberschrift = new H1("Bikes");
-        H2 ueberschrift2 = new H2("Preisguenstige Premium-Fahrräder");
+        H2 ueberschrift2 = new H2("Premium Gebraucht-Fahrräder");
         Image img = new Image("images/fahrrad.webp","logo");
         img.setWidth("330px");
         img.setHeight("330px");

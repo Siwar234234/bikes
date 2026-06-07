@@ -39,7 +39,7 @@ public class ShippingView extends VerticalLayout {
         cards.setFlexWrap(FlexLayout.FlexWrap.WRAP);
         add(cards);
 
-        Paragraph info = new Paragraph("Versandt innerhalb von 2 Wochen garantiert!");
+        Paragraph info = new Paragraph("Garantierter Versand innerhalb 2 Wochen");
         info.setWidth("100%");
         info.getStyle().set("text-align", "center");
         add(info);

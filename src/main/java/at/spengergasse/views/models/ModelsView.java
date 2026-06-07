@@ -57,7 +57,7 @@ public class ModelsView extends VerticalLayout {
         grid.addColumn(Bike::getFarbe).setHeader("Farbe").setSortable(true);
         grid.addColumn(Bike::getVdatum).setHeader("Erscheinungsdatum").setSortable(true);
         grid.addColumn(Bike::getVerfuegbar).setHeader("verfuegbar").setSortable(true);
-        grid.addColumn(bike ->{
+        grid.addComponentColumn(bike ->{
             Checkbox cb = new Checkbox();
             cb.setValue(Boolean.TRUE.equals(bike.getVerfuegbar()));
             cb.setReadOnly(true);
@@ -68,12 +68,15 @@ public class ModelsView extends VerticalLayout {
                 .setHeader("Action")
                 .setSortable(false);
         grid.addComponentColumn(bike -> new Button("Preis+100",b -> plusHundert(bike.getBikeId())))
-                .setHeader("Action2")
+                .setHeader("Action")
                 .setSortable(false);
+        grid.addComponentColumn(bike -> new Button("edit", b -> addOne(bike)))
+                        .setHeader("Action")
+                        .setSortable(false);
 
         buttonRemoveAll.addClickListener(b -> setButtonRemoveAll());
         buttonAdd10.addClickListener(b -> setTestDaten());
-        buttonAdd1.addClickListener(b -> addOne());
+        buttonAdd1.addClickListener(b -> addOne(null));
         addWrongModell.addClickListener(b -> addWrongModell());
         HorizontalLayout buttons = new HorizontalLayout(buttonRemoveAll,buttonAdd10,addWrongModell,buttonAdd1);
         buttons.setSpacing(true);
@@ -117,9 +120,17 @@ public class ModelsView extends VerticalLayout {
         reload();
     }
 
-    public void addOne(){
+    public void addOne(Bike existingBike){
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Fahhrad hinzufuegen");
+        Bike bike;
+        if(existingBike == null){
+            bike = new Bike();
+            dialog.setHeaderTitle("Add bike");
+        }else{
+            bike = existingBike;
+            dialog.setHeaderTitle("Edit bike");
+        }
+
 
         TextField bikeId = new TextField("BikeId");
         bikeId.setReadOnly(true);
@@ -136,18 +147,21 @@ public class ModelsView extends VerticalLayout {
         binder.forField(bezeichnung).bind("bezeichnung");
         binder.forField(verfuegbar).bind("verfuegbar");
         binder.forField(preis).bind("preis");
+        binder.forField(farbe).bind("farbe");
         binder.forField(vdatum).bind("vdatum");
 
-        Bike bike = new Bike();
         binder.setBean(bike);
         bikeId.setValue(""+bike.getBikeId());
+
         VerticalLayout v = new VerticalLayout();
         v.add(bikeId, bezeichnung, verfuegbar, preis, farbe, vdatum);
 
-        Button addButton = new Button("add");
+        Button addButton = new Button("OK");
         addButton.addClickListener(e ->{
             if(binder.validate().isOk()){
-                bikeService.addBike(bike);
+                if(existingBike == null){
+                    bikeService.addBike(bike);
+                }
                 reload();
                 dialog.close();
             }else{
@@ -159,8 +173,6 @@ public class ModelsView extends VerticalLayout {
         dialog.getFooter().add(addButton,cancelButton);
         dialog.add(v);
         dialog.open();
-
-
     }
     private void reload(){
         grid.setItems(bikeService.findAll());

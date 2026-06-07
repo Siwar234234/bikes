@@ -22,7 +22,7 @@ public class Bike {
     private Boolean verfuegbar;
 
     @DecimalMin(value = "100.0", message = "The min. price is 100.0 Eur")
-    @DecimalMax(value = "1000.0", message = "The max. price is 1000.0 Eur")
+    @DecimalMax(value = "10000.0", message = "The max. price is 1000.0 Eur")
     private Double preis;
     private LocalDate vdatum;
     private static final AtomicLong sequence = new AtomicLong(1000);
