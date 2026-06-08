@@ -80,6 +80,9 @@ public class BikeService {
     public void plusHundertEur(Long id){
         repository.findAll().stream()
                 .filter(b -> b.getBikeId().equals(id))
-                .forEach(b -> b.setPreis(b.getPreis()+100.0));
+                .forEach(b -> {
+                    b.setPreis(b.getPreis() + 100.0);
+                    repository.save(b);
+                });
     }
 }

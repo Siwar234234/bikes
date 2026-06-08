@@ -67,6 +67,12 @@ public class ModelsView extends VerticalLayout {
         grid.addComponentColumn(bike -> new Button("Delete", b -> deleteById(bike.getBikeId())))
                 .setHeader("Action")
                 .setSortable(false);
+
+
+
+
+
+
         grid.addComponentColumn(bike -> new Button("Preis+100",b -> plusHundert(bike.getBikeId())))
                 .setHeader("Action")
                 .setSortable(false);
