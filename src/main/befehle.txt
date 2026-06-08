@@ -1,10 +1,14 @@
 psql "postgresql://postgres:postgres@localhost:5432"
 psql "postgresql://postgres:postgres@localhost:5432"
-CREATE DATABASE pizzagriesy;
-CREATE USER pizzagriesy WITH PASSWORD 'pizzagriesy';
-GRANT ALL PRIVILEGES ON DATABASE pizzagriesy TO pizzagriesy;
+CREATE DATABASE bike1;
+CREATE USER bike1 WITH PASSWORD 'bike1';
+GRANT ALL PRIVILEGES ON DATABASE bike1 TO bike1;
 quit;
 
+GRANT USAGE ON SCHEMA public TO bike1;
+GRANT CREATE ON SCHEMA public TO bike1;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO bike1;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO bike1;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.router.*;

@@ -9,8 +9,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
+@Table(name = "bike")
 public class Bike {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bikeId;
     @NotNull(message = "Bezeichnung darf nicht null sein")
     @Size(min = 3, max = 50, message = "Bezeichnung muss zw 2 und 50 Zeichein groß sein")
@@ -25,7 +27,6 @@ public class Bike {
     @DecimalMax(value = "10000.0", message = "The max. price is 1000.0 Eur")
     private Double preis;
     private LocalDate vdatum;
-    private static final AtomicLong sequence = new AtomicLong(1000);
 
     public Bike(Long bikeId, String bezeichnung, String farbe,
                 Boolean verfuegbar, Double preis, LocalDate vdatum) {
@@ -40,7 +41,6 @@ public class Bike {
 
     public Bike(String bezeichnung, String farbe,
                 Boolean verfuegbar, Double preis, LocalDate vdatum) {
-        setBikeId();
         setBezeichnung(bezeichnung);
         setFarbe(farbe);
         setVerfuegbar(verfuegbar);
@@ -49,16 +49,11 @@ public class Bike {
     }
 
     public Bike() {
-        setBikeId();
         setBezeichnung("UNKN");
-        setFarbe("schwarz");
+        setFarbe("Schwarz");
         setVerfuegbar(false);
-        setPreis(0.0);
+        setPreis(200.0);
         setVdatum(LocalDate.now());
-    }
-
-    public void setBikeId() {
-        this.bikeId = sequence.getAndIncrement();
     }
 
 

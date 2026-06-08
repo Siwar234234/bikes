@@ -159,11 +159,11 @@ public class ModelsView extends VerticalLayout {
         Button addButton = new Button("OK");
         addButton.addClickListener(e ->{
             if(binder.validate().isOk()){
-                if(existingBike == null){
-                    bikeService.addBike(bike);
-                }
+
+                bikeService.addBike(bike);
                 reload();
                 dialog.close();
+
             }else{
                 Notification.show("Fehlber bei den Daten");
             }

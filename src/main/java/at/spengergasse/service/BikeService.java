@@ -2,20 +2,29 @@ package at.spengergasse.service;
 
 import at.spengergasse.domain.Bike;
 import at.spengergasse.domain.BikeException;
+import at.spengergasse.repository.BikeRepsitory;
 import com.github.javafaker.Faker;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Collectors;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
 @Service
 public class BikeService {
-    private final ArrayList<Bike> bikes;
-    public BikeService(){
-        bikes= new ArrayList<>(1000);
-        testDaten(100);
+    private final BikeRepsitory repository;
+
+    public BikeService(BikeRepsitory repository){
+        this.repository = repository;
+    }
+    public void init() {
+        if (repository.count() == 0) {
+            testDaten(100);
+        }
     }
 
     public void testDaten(int anzahl){
@@ -37,49 +46,40 @@ public class BikeService {
             verfuegbar = faker.bool().bool();
 
             bike = new Bike(bezeichnung,farbe,verfuegbar, preis,vdatum);
-            bikes.add(bike);
-
+            repository.save(bike);
             }
     }
-    public boolean addBike(Bike b){
-        return bikes.add(b);
+    public void addBike(Bike b){
+        repository.save(b);
     }
 
     public ArrayList<Bike> findAll() {
-        ArrayList<Bike> copy = new ArrayList<>(bikes);
+        ArrayList<Bike> copy = (ArrayList<Bike>) repository.findAll();
         return copy;
     }
 
     public void removeAll(){
-        bikes.clear();
+        repository.deleteAll();
     }
     public String toString(){
-        return bikes.stream()
+        return repository.findAll().stream()
             .map(bike -> bike.toString())
             .collect(Collectors.joining("\n"));
     }
 
     public void removeById(Long id){
-        Iterator<Bike> iter = bikes.iterator();
-        Bike b;
-        boolean gefunden = false;
-        while(iter.hasNext()){
-            b = iter.next();
-            if(b.getBikeId() == id){
-                iter.remove();
-                gefunden = true;
-            }
+        if(id== null){
+            throw new BikeException("Uebergebene Id ist null");
         }
-        if(!gefunden){
-            throw new BikeException("Entfernen hat nicht funktioniert");
+        if(!repository.existsById(id)){
+            throw new BikeException("Fahrrad wurde bereits gelöscht");
         }
+        repository.deleteById(id);
     }
 
     public void plusHundertEur(Long id){
-        for(Bike b : bikes){
-            if(b.getBikeId() == id){
-                b.setPreis(b.getPreis()+100.0);
-            }
-        }
+        repository.findAll().stream()
+                .filter(b -> b.getBikeId().equals(id))
+                .forEach(b -> b.setPreis(b.getPreis()+100.0));
     }
 }
